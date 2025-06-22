@@ -1,12 +1,19 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import reelRoute from './routes/reel.route.js';
 
 // Load environment variables from .env file
 dotenv.config();
 
 // Initialize Express app
 const app = express();
+
+// Middleware to parse incoming JSON requests
+app.use(express.json());
+
+// Register reel-related routes under /api/reels
+app.use("/api/reels", reelRoute);
 
 // Root route for testing
 app.get('/', (req, res) => {
