@@ -4,12 +4,12 @@ const ReelSchema = mongoose.Schema(
     {
         title: {
         type: String,
-        required: [true, "Enter a reel title"]
+        required: true
         },
 
-        releaseYear: {
+        year: {
         type: Number,
-        required: [true, "Enter the release year"]
+        required: true
         },
 
         image: {

@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Reel from '../models/reel.model.js';
 
 // Get all reels
@@ -5,51 +6,66 @@ import Reel from '../models/reel.model.js';
 const getReels = async (req, res) => {
     try {
         const reels = await Reel.find({});
-        res.status(200).json(reels);
+        res.status(200).json({ success: true, data: reels });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.log("Error in getting reels:", error.message);
+        res.status(500).json({ success: false, message: "Server Error" });
     }
 };
 
 // Create a new reel
 // Endpoint: POST /api/reels
 const postReel = async (req, res) => {
+    const reel = req.body;
+    if(!reel.title || !reel.year) {
+        return res.status(400).json({ success: false, message: "Fill all required fields" });
+    }
+    const newReel = new Reel(reel);
     try {
-        const reel = await Reel.create(req.body);
-        res.status(200).json(reel);
+        await newReel.save();
+        res.status(201).json({ success: true, data: newReel });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error("Error in creating reel:", error.message);
+        res.status(500).json({ success: false, message: "Server Error" });
     }
 };
 
 // Update a reel
 // Endpoint: PUT /api/reels/:id
 const putReel = async (req, res) => {
+    const { id } = req.params;
+    const reel = req.body;
+    if(!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({ success: false, message: "Invalid Reel ID" });
+    }
     try {
-        const { id } = req.params;
-        const reel = await Reel.findByIdAndUpdate(id, req.body);
-        if (!reel) {
-            return res.status(404).json({ message: "Reel not found" });
+        const updatedReel = await Reel.findByIdAndUpdate(id, reel, { new: true });
+        if(!updatedReel) {
+            return res.status(404).json({ success: false, message: "Reel not found" });
         }
-        const updatedReel = await Reel.findById(id);
-        res.status(200).json(updatedReel);
+        res.status(200).json({ success: true, data: updatedReel });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error("Error in updating reel:", error.message);
+        res.status(500).json({ success: false, message: "Server Error" });
     }
 };
 
 // Delete a reel
 // Endpoint: Delete /api/reels/:id
 const deleteReel = async (req, res) => {
+    const { id } = req.params;
+    if(!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({ success: false, message: "Invalid Reel ID" });
+    }
     try {
-        const { id } = req.params;
-        const reel = await Reel.findByIdAndDelete(id);
-        if (!reel) {
-            return res.status(404).json({ message: "Reel not found" });
+        const deletedReel = await Reel.findByIdAndDelete(id);
+        if(!deletedReel) {
+            return res.status(404).json({ success: false, message: "Reel not found" });
         }
-        res.status(200).json({ message: "Reel deleted successfully" });
+        res.status(200).json({ success: true, message: "Reel successfully deleted" });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error("Error in deleting reel:", error.message);
+        res.status(500).json({ success: false, message: "Server Error" });
     }
 };
 
@@ -59,4 +75,3 @@ export {
     putReel,
     deleteReel
 };
-
