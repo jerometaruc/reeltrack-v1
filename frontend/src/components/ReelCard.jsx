@@ -1,10 +1,12 @@
 import React from 'react';
-import { Trash2Icon } from 'lucide-react';
+import { PenSquareIcon, Trash2Icon } from "lucide-react";
+import { Link } from "react-router";
 import { formatDate } from "../lib/utils";
 
 const ReelCard = ({reel}) => {
   return (
-    <div
+    <Link
+      to={`/reel/${reel._id}`}
       className="card bg-base-100 hover:shadow-lg transition-all duration-200 
       border-t-4 border-solid border-primary"
     >
@@ -16,15 +18,17 @@ const ReelCard = ({reel}) => {
                 {formatDate(new Date(reel.createdAt))}
             </span>
             <div className="flex items-center gap-1">
+                <PenSquareIcon className="size-4" />
                 <button
-                className="btn btn-ghost btn-xs text-error"
+                  className="btn btn-ghost btn-xs text-error"
+                  onClick={(e) => handleDelete(e, reel._id)}
                 >
                 <Trash2Icon className="size-4" />
                 </button>
             </div>
             </div>
         </div>
-    </div>
+    </Link>
   );
 };
 
