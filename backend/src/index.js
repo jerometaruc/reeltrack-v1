@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import reelRoute from './routes/reel.route.js';
 
 // Load environment variables from .env file
@@ -9,7 +10,10 @@ dotenv.config();
 // Initialize Express app
 const app = express();
 
-// Middleware to parse incoming JSON requests
+// Middleware
+app.use(cors({
+    origin:"http://localhost:5173",
+}));
 app.use(express.json());
 
 // Register reel-related routes under /api/reels
