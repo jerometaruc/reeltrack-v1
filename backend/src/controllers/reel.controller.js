@@ -13,6 +13,19 @@ const getReels = async (req, res) => {
     }
 };
 
+// Get a reel by ID
+// Endpoint: GET /api/reels/:id
+const getReel = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const reel = await Reel.findById(id);
+        res.status(200).json({ success: true, data: reel });
+    } catch (error) {
+        console.log("Error in getting reel:", error.message);
+        res.status(500).json({ message: "Server Error" });
+    }
+};
+
 // Create a new reel
 // Endpoint: POST /api/reels
 const postReel = async (req, res) => {
@@ -71,6 +84,7 @@ const deleteReel = async (req, res) => {
 
 export {
     getReels,
+    getReel,
     postReel,
     putReel,
     deleteReel
