@@ -1,19 +1,19 @@
 import React from 'react';
 import axios from 'axios';
-import { PenSquareIcon, Trash2Icon } from "lucide-react";
+import { PenSquareIcon, CircleCheckIcon } from "lucide-react";
 import { Link } from "react-router";
 import toast from 'react-hot-toast';
 import { formatDate } from "../lib/utils";
 
 const ReelCard = ({reel, setReels}) => {
   const handleDelete = async (e, id) => {
-    if(!window.confirm("Are you sure you want to delete this note?")) {
+    if(!window.confirm("Watched and ready to delete?")) {
       return;
     }
     try {
       await axios.delete(`http://localhost:3000/api/reels/${id}`);
       setReels((prev) => prev.filter((reel) => reel._id !== id));
-      toast.success("Reel deleted successfully");
+      toast.success("Watched and Deleted");
     } catch (error) {
       console.log("Error in handleDelete", error);
       toast.error("Failed to delete reel");
@@ -40,10 +40,10 @@ const ReelCard = ({reel, setReels}) => {
               <PenSquareIcon className="size-4" />
               </Link>
               <button
-                className="btn btn-ghost btn-xs text-error"
+                className="btn btn-ghost btn-xs text-success"
                 onClick={(e) => handleDelete(e, reel._id)}
               >
-              <Trash2Icon className="size-4" />
+              <CircleCheckIcon className="size-4" />
               </button>
             </div>
             </div>
